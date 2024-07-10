@@ -9,6 +9,7 @@ const ButtonVariant = ['primary', 'outline', 'ghost', 'light', 'dark'] as const;
 const ButtonSize = ['sm', 'base'] as const;
 
 type ButtonProps = {
+  Click?: () => void;
   isLoading?: boolean;
   isDarkBg?: boolean;
   variant?: (typeof ButtonVariant)[number];
@@ -24,6 +25,7 @@ type ButtonProps = {
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
+      Click,
       children,
       className,
       disabled: buttonDisabled,
@@ -42,6 +44,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <button
+        onClick={Click}
         ref={ref}
         type='button'
         disabled={disabled}
@@ -59,10 +62,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           //#region  //*=========== Variants ===========
           [
             variant === 'primary' && [
-              'bg-primary-500 text-white',
+              'bg-[#355BF5] text-white',
               'border-primary-600 border',
-              'hover:bg-primary-600 hover:text-white',
-              'active:bg-primary-700',
+              'hover:bg-[#1e45de] hover:text-white',
+              'active:bg-[#1e45de]',
               'disabled:bg-primary-700',
             ],
             variant === 'outline' && [

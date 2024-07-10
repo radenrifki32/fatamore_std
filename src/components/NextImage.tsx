@@ -1,3 +1,4 @@
+import { motion, MotionProps } from 'framer-motion';
 import Image, { ImageProps } from 'next/image';
 import * as React from 'react';
 
@@ -10,17 +11,14 @@ type NextImageProps = {
     blur?: string;
   };
   alt: string;
+  variants?: MotionProps['variants']; // Define variants prop
+  animate?: MotionProps['animate'];
 } & (
   | { width: string | number; height: string | number }
   | { layout: 'fill'; width?: string | number; height?: string | number }
 ) &
   ImageProps;
 
-/**
- *
- * @description Must set width using `w-` className
- * @param useSkeleton add background with pulse animation, don't use it if image is transparent
- */
 export default function NextImage({
   useSkeleton = false,
   src,
@@ -29,6 +27,8 @@ export default function NextImage({
   alt,
   className,
   classNames,
+  animate,
+  variants,
   ...rest
 }: NextImageProps) {
   const [status, setStatus] = React.useState(
@@ -37,9 +37,11 @@ export default function NextImage({
   const widthIsSet = className?.includes('w-') ?? false;
 
   return (
-    <figure
+    <motion.figure
       style={!widthIsSet ? { width: `${width}px` } : undefined}
       className={className}
+      variants={variants} // Pass variants prop to motion
+      animate={animate}
     >
       <Image
         className={cn(
@@ -53,6 +55,6 @@ export default function NextImage({
         onLoadingComplete={() => setStatus('complete')}
         {...rest}
       />
-    </figure>
+    </motion.figure>
   );
 }
