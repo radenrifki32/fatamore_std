@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import Fatamore from 'public/images/logo-fatamore.png';
+import Fuison from 'public/images/logo-fusion.png';
 import { useState } from 'react';
 
 import Button from '@/components/buttons/Button';
@@ -31,15 +31,18 @@ export default function Header() {
               className='flex items-center space-x-3 rtl:space-x-reverse'
             >
               <NextImage
-                src={Fatamore.src}
+                src={Fuison.src}
                 className='h-8'
                 alt='Fatamore Logo'
-                height={Fatamore.height}
-                width={Fatamore.width}
+                height={Fuison.height}
+                width={Fuison.width}
               />
-              <span className='self-center whitespace-nowrap text-2xl font-semibold dark:text-white'>
-                Fatamore
-              </span>
+              <p className='text-md self-center whitespace-nowrap dark:text-white'>
+                Fusion
+                <span className='text-md self-center whitespace-nowrap font-semibold dark:text-white'>
+                  Craft
+                </span>
+              </p>
             </Link>
             <div className='flex space-x-3 rtl:space-x-reverse md:order-2 md:space-x-0'>
               <Button

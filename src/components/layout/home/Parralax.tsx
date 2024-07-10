@@ -1,59 +1,85 @@
-import { wrap } from '@motionone/utils';
-import {
-  motion,
-  useAnimationFrame,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform,
-  useVelocity,
-} from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
+import { Folder, LucideIcon, MessageSquareMore, Users } from 'lucide-react';
+import React from 'react';
 
-interface ParallaxProps {
-  children: string;
-  baseVelocity: number;
+const dataItemMarque: ItemMarque[] = [
+  {
+    title: 'Collections',
+    icon: Folder,
+  },
+  {
+    title: 'In-app messaging',
+    icon: MessageSquareMore,
+  },
+  {
+    title: 'Collaboration',
+    icon: Users,
+  },
+];
+
+interface ItemMarque {
+  title: string;
+  icon: LucideIcon;
 }
 
-function ParallaxText({ children, baseVelocity = 100 }: ParallaxProps) {
-  const baseX = useMotionValue(0);
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400,
-  });
-  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
-    clamp: false,
-  });
-
-  const x = useTransform(baseX, (v) => `${wrap(-20, -45, v)}%`);
-
-  const directionFactor = useRef<number>(1);
-  useAnimationFrame((t, delta) => {
-    let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
-
-    if (velocityFactor.get() < 0) {
-      directionFactor.current = -1;
-    } else if (velocityFactor.get() > 0) {
-      directionFactor.current = 1;
-    }
-
-    moveBy += directionFactor.current * moveBy * velocityFactor.get();
-
-    baseX.set(baseX.get() + moveBy);
-  });
-
+const Marquee = () => {
   return (
-    <div className='parallax'>
-      <motion.div className='scroller' style={{ x }}>
-        <span className='nama'>{children} </span>
-        <span>{children} </span>
-        <span>{children} </span>
-        <span>{children} </span>
-      </motion.div>
+    <div className='marquee-container flex items-center '>
+      <div className=' flex'>
+        <motion.div
+          initial={{ x: 0 }}
+          animate={{ x: '-100%' }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+          className='flex shrink-0'
+        >
+          {dataItemMarque.map((item, index) => (
+            <div key={index} className='mx-10'>
+              <div className='flex items-center gap-5'>
+                <item.icon size='28' className='text-[#979CA2]' />
+                <span className='font-poppins text-md font-light text-[#979CA2]'>
+                  {item.title}
+                </span>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+        <motion.div
+          initial={{ x: 0 }}
+          animate={{ x: '-100%' }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+          className='flex shrink-0'
+        >
+          {dataItemMarque.map((item, index) => (
+            <div key={index} className='mx-10'>
+              <div className='flex items-center gap-5 '>
+                <item.icon size='28' className='text-[#979CA2]' />
+                <span className='font-poppins text-md font-light text-[#979CA2]'>
+                  {item.title}
+                </span>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+        <motion.div
+          initial={{ x: 0 }}
+          animate={{ x: '-100%' }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+          className='flex shrink-0'
+        >
+          {dataItemMarque.map((item, index) => (
+            <div key={index} className='mx-10'>
+              <div className='flex items-center gap-5 '>
+                <item.icon size='28' className='text-[#979CA2]' />
+                <span className='font-poppins text-md font-light text-[#979CA2]'>
+                  {item.title}
+                </span>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
     </div>
   );
-}
+};
 
-export default ParallaxText;
+export default Marquee;

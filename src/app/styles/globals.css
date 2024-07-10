@@ -239,27 +239,72 @@
   border: 1px solid #eeeeee;
   box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.05);
 }
-
-.parallax {
-  overflow: hidden;
-  letter-spacing: -2px;
-  line-height: 0.8;
-  margin: 0;
-  white-space: nowrap;
-  display: flex;
-  flex-wrap: nowrap;
+.marquee-container {
+  width: 70%;
+  height: 100px; /* Sesuaikan tinggi sesuai kebutuhan */
+  overflow-x: hidden;
+  position: relative;
+  z-index: 10; /* Atur z-index yang memadai */
 }
 
-.parallax .scroller {
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 20px;
-  display: flex;
-  white-space: nowrap;
-  display: flex;
-  flex-wrap: nowrap;
+.marquee-container::before,
+.marquee-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10%;
+  pointer-events: none;
+  z-index: 20;
+  border-radius: 0px 10px 0px 0px;
 }
 
-.parallax span {
-  display: block;
+.marquee-container::before {
+  left: 0;
+  background-image: linear-gradient(
+    to left,
+    rgba(244, 247, 249, 0),
+    rgba(244, 247, 249, 1)
+  ); /* Gradient transparan ke warna F4F7F9 */
+}
+
+.marquee-container::after {
+  right: 0;
+  background-image: linear-gradient(
+    to right,
+    rgba(244, 247, 249, 0),
+    rgba(244, 247, 249, 1)
+  ); /* Gradient transparan ke warna F4F7F9 */
+}
+
+.marquee img {
+  height: 80px;
+  vertical-align: middle;
+}
+
+.marquee span {
+  margin-left: 10px;
+  font-size: 24px;
+  vertical-align: middle;
+}
+
+.liner-border {
+  position: relative;
+  padding: 20px;
+  text-align: center;
+}
+
+.liner-border::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px; /* Border height */
+  background: linear-gradient(
+    to left,
+    rgba(221, 222, 224, 0),
+    rgba(221, 222, 224, 1),
+    rgba(221, 222, 224, 0)
+  );
 }

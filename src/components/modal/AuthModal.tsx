@@ -8,7 +8,10 @@ type AuthModalProps = {
   toggleModal: () => void;
 };
 
-export default function AuthModal({ isOpen, toggleModal }: AuthModalProps) {
+export default function AuthModal({
+  isOpen,
+  toggleModal,
+}: Readonly<AuthModalProps>) {
   const [isShowIconHoverGoogle, setisShowIconHoverGoogle] =
     useState<boolean>(false);
   const [isShowIconHoverGithub, setisShowIconHoverGoogleGithub] =

@@ -7,7 +7,8 @@ import timeManagement from 'public/images/flexible-smartphone-interface-with-che
 import React from 'react';
 
 import DonutSVG from '@/components/layout/home/donut';
-import ParallaxText from '@/components/layout/home/Parralax';
+import Marquee from '@/components/layout/home/Parralax';
+import WhyFusion from '@/components/layout/home/WhyFusion';
 import NextImage from '@/components/NextImage';
 
 export default function MainPage() {
@@ -343,11 +344,11 @@ export default function MainPage() {
                         y2='23.2255'
                         gradientUnits='userSpaceOnUse'
                       >
-                        <stop stop-color='#485C6B' />
+                        <stop stopColor='#485C6B' />
                         <stop
                           offset='1'
-                          stop-color='#485C6B'
-                          stop-opacity='0.01'
+                          stopColor='#485C6B'
+                          stopOpacity='0.01'
                         />
                       </linearGradient>
                     </defs>
@@ -382,11 +383,11 @@ export default function MainPage() {
                         y2='24.9467'
                         gradientUnits='userSpaceOnUse'
                       >
-                        <stop stop-color='#4A5D6C' />
+                        <stop stopColor='#4A5D6C' />
                         <stop
                           offset='1'
-                          stop-color='#4A5D6C'
-                          stop-opacity='0.01'
+                          stopColor='#4A5D6C'
+                          stopOpacity='0.01'
                         />
                       </linearGradient>
                     </defs>
@@ -421,11 +422,11 @@ export default function MainPage() {
                         y2='63.9898'
                         gradientUnits='userSpaceOnUse'
                       >
-                        <stop stop-color='#4B5E6D' />
+                        <stop stopColor='#4B5E6D' />
                         <stop
                           offset='1'
-                          stop-color='#4B5E6D'
-                          stop-opacity='0.01'
+                          stopColor='#4B5E6D'
+                          stopOpacity='0.01'
                         />
                       </linearGradient>
                     </defs>
@@ -444,10 +445,11 @@ export default function MainPage() {
           </div>
         </div>
       </motion.div>
-      <div className='my-20 h-[300px]'>
-        <ParallaxText baseVelocity={-5}>Resource</ParallaxText>
-        <ParallaxText baseVelocity={5}>Colaboration</ParallaxText>
-        <ParallaxText baseVelocity={-5}>In-app Messaging++</ParallaxText>
+      <div className='my-4 flex  items-center justify-center overflow-x-hidden'>
+        <Marquee />
+      </div>
+      <div className='mt-24 flex items-center justify-center'>
+        <WhyFusion />
       </div>
     </>
   );
