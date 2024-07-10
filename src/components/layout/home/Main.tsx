@@ -189,7 +189,7 @@ export default function MainPage() {
             skewY: -4,
             boxShadow: '10px 10px 20px 20px rgba(42, 74, 203, 0.15)',
           }}
-          className='box-stroke relative   h-[300px] w-full rounded-2xl bg-[#F4F7F9]  p-6 dark:border-gray-700 dark:bg-gray-800 md:mb-20 md:w-[300px]'
+          className='box-stroke relative   h-[300px] w-full rounded-[45px] bg-[#F4F7F9]  p-6 dark:border-gray-700 dark:bg-gray-800 md:mb-20 md:w-[300px]'
         >
           <div>
             <h5 className='font-poppins mb-2 w-1/2 rounded-lg  bg-[#E8EBEF] px-2 py-2 text-center text-sm font-light tracking-tight text-[#6C7982] dark:text-white'>
@@ -251,7 +251,7 @@ export default function MainPage() {
           </div>
         </motion.div>
         <motion.div
-          className='box-stroke relative mt-20 h-full w-full overflow-hidden rounded-2xl  bg-[#F4F7F9] p-6 dark:border-gray-700 dark:bg-gray-800 md:h-[400px] md:w-[400px]'
+          className='box-stroke relative mt-8 h-full w-full overflow-hidden rounded-[55px]  bg-[#F4F7F9] p-6 dark:border-gray-700 dark:bg-gray-800 md:h-[400px] md:w-[400px]'
           onMouseEnter={handleMouseEnterControls}
           onMouseLeave={handleMouseLeaveControls}
           whileHover={{
@@ -304,7 +304,7 @@ export default function MainPage() {
           </div>
         </motion.div>
         <div
-          className='box-stroke relative mb-20 h-[320px] w-[300px]  rounded-2xl bg-[#F4F7F9] p-6 dark:border-gray-700 dark:bg-gray-800'
+          className='box-stroke relative mb-20 h-[320px] w-[300px]  rounded-[50px] bg-[#F4F7F9] p-6 dark:border-gray-700 dark:bg-gray-800'
           onMouseEnter={handleMouseEnterControls}
           onMouseLeave={handleMouseLeaveControls}
         >

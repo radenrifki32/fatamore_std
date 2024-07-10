@@ -8,13 +8,13 @@ export default function HomePage() {
   return (
     <Layout>
       <main className='relative -z-0 h-full w-full bg-[#F4F7F9]'>
-        <div className='absolute left-0 top-0 -z-10 h-full '>
+        <div className='absolute -top-[65px] left-0 -z-10 h-full '>
           <motion.svg
-            initial={{ opacity: 0, y: '100%' }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -200 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.8, duration: 0.8, ease: 'easeOut' }}
-            width='372'
-            height='915'
+            width='250'
+            height='750'
             viewBox='0 0 372 915'
             fill='none'
             xmlns='http://www.w3.org/2000/svg'
@@ -39,13 +39,13 @@ export default function HomePage() {
           </motion.svg>
         </div>
 
-        <div className='absolute right-0 top-0 -z-10  h-full '>
+        <div className='absolute -top-[65px] right-0 -z-10  h-full '>
           <motion.svg
-            initial={{ opacity: 1, y: '100%' }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 1, x: 200 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.8, duration: 0.8, ease: 'easeOut' }}
-            width='372'
-            height='915'
+            width='250'
+            height='750'
             viewBox='0 0 372 915'
             fill='none'
             xmlns='http://www.w3.org/2000/svg'
