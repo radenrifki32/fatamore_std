@@ -1,17 +1,22 @@
 'use client';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import Link from 'next/link';
+import { signOut, useSession } from 'next-auth/react';
 import Fuison from 'public/images/logo-fusion.png';
 import { useState } from 'react';
 
-import Button from '@/components/buttons/Button';
-import AuthModal from '@/components/modal/AuthModal';
-import NextImage from '@/components/NextImage';
+import Button from '@/app/components/buttons/Button';
+import AuthModal from '@/app/components/modal/AuthModal';
+import NextImage from '@/app/components/NextImage';
+
 export default function Header() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const changeOpenModal = () => {
     setOpenModal(!openModal);
   };
+  const { data: session, status } = useSession();
+
   return (
     <>
       <motion.div
@@ -45,13 +50,30 @@ export default function Header() {
               </p>
             </Link>
             <div className='flex space-x-3 rtl:space-x-reverse md:order-2 md:space-x-0'>
-              <Button
-                variant='primary'
-                Click={changeOpenModal}
-                className='rounded-md px-4 py-2 text-sm font-light'
-              >
-                Register
-              </Button>
+              {status === 'authenticated' ? (
+                <>
+                  <Button
+                    variant='primary'
+                    Click={signOut}
+                    className='flex h-10 w-10 items-center justify-center rounded-full p-0 text-sm font-light'
+                  >
+                    <Image
+                      src={session?.user?.image ?? ''}
+                      alt='image'
+                      className='h-full w-full rounded-full object-cover'
+                    />
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  variant='primary'
+                  Click={changeOpenModal}
+                  className='rounded-md px-4 py-2 text-sm font-light'
+                >
+                  Register
+                </Button>
+              )}
+
               <button
                 data-collapse-toggle='navbar-sticky'
                 type='button'

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { Register, RegisterResponse } from '@/lib/inferface/Auth';
 
-import { AuthRegisterService } from '@/services/AuthService';
+import { AuthRegisterService } from '@/server/services/AuthService';
 
 interface User {
   username: string;

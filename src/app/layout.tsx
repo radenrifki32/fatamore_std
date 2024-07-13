@@ -4,7 +4,8 @@ import localFont from 'next/font/local';
 
 import './styles/globals.css';
 
-import StoreProvider from '@/app/storeProvider';
+import StoreProvider from '@/app/components/providers/storeProvider';
+import SessionWrapper from '@/app/components/providers/WrapperProvider';
 export const metadata: Metadata = {
   title: 'Home',
   description: 'Welcome to Home Fatamorgana',
@@ -29,11 +30,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <StoreProvider>
-        <body className={`${myFont.className} ${poppins.className}`}>
-          {children}
-        </body>
-      </StoreProvider>
+      <SessionWrapper>
+        <StoreProvider>
+          <body className={`${myFont.className} ${poppins.className}`}>
+            {children}
+          </body>
+        </StoreProvider>
+      </SessionWrapper>
     </html>
   );
 }

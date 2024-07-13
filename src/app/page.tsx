@@ -1,9 +1,9 @@
 'use client';
 import { motion } from 'framer-motion';
 
-import Header from '@/components/layout/Header';
-import MainPage from '@/components/layout/home/Main';
-import Layout from '@/components/layout/Layout';
+import MainPage from '@/app/components/home/Main';
+import Header from '@/app/components/layout/Header';
+import Layout from '@/app/components/layout/Layout';
 export default function HomePage() {
   return (
     <Layout>

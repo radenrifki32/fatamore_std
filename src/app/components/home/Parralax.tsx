@@ -34,7 +34,7 @@ const Marquee = () => {
         >
           {dataItemMarque.map((item, index) => (
             <div key={index} className='mx-10'>
-              <div className='flex items-center gap-5'>
+              <div className='flex items-center gap-3'>
                 <item.icon size='28' className='text-[#979CA2]' />
                 <span className='font-poppins text-md font-light text-[#979CA2]'>
                   {item.title}
@@ -51,7 +51,7 @@ const Marquee = () => {
         >
           {dataItemMarque.map((item, index) => (
             <div key={index} className='mx-10'>
-              <div className='flex items-center gap-5 '>
+              <div className='flex items-center gap-3 '>
                 <item.icon size='28' className='text-[#979CA2]' />
                 <span className='font-poppins text-md font-light text-[#979CA2]'>
                   {item.title}
@@ -68,7 +68,7 @@ const Marquee = () => {
         >
           {dataItemMarque.map((item, index) => (
             <div key={index} className='mx-10'>
-              <div className='flex items-center gap-5 '>
+              <div className='flex items-center gap-3 '>
                 <item.icon size='28' className='text-[#979CA2]' />
                 <span className='font-poppins text-md font-light text-[#979CA2]'>
                   {item.title}

@@ -1,8 +1,9 @@
 import { Github, MoveRight } from 'lucide-react';
+import { signIn } from 'next-auth/react';
 import Google from 'public/images/igoogle.png';
 import { useState } from 'react';
 
-import NextImage from '@/components/NextImage';
+import NextImage from '@/app/components/NextImage';
 type AuthModalProps = {
   isOpen: boolean;
   toggleModal: () => void;
@@ -68,6 +69,7 @@ export default function AuthModal({
               </div>
               <div className=' flex flex-col gap-4 p-4 md:p-5'>
                 <div
+                  onClick={() => signIn('google')}
                   className='border-gray relative flex items-center justify-center gap-3 rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100'
                   onMouseEnter={() => onShowIconRight(true)}
                   onMouseLeave={() => onLeaveIconRigth(true)}
@@ -89,6 +91,7 @@ export default function AuthModal({
                 </div>
 
                 <div
+                  onClick={() => signIn('github')}
                   className='border-gray relative flex items-center justify-center gap-3 rounded-md border p-2 hover:cursor-pointer hover:bg-gray-100'
                   onMouseEnter={() => onShowIconRight(false)}
                   onMouseLeave={() => onLeaveIconRigth(false)}

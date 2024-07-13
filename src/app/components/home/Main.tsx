@@ -6,10 +6,11 @@ import clockImage from 'public/images/clock.png';
 import timeManagement from 'public/images/flexible-smartphone-interface-with-checklist.png';
 import React from 'react';
 
-import DonutSVG from '@/components/layout/home/donut';
-import Marquee from '@/components/layout/home/Parralax';
-import WhyFusion from '@/components/layout/home/WhyFusion';
-import NextImage from '@/components/NextImage';
+import DonutSVG from '@/app/components/home/donut';
+import Features from '@/app/components/home/features';
+import Marquee from '@/app/components/home/Parralax';
+import WhyFusion from '@/app/components/home/WhyFusion';
+import NextImage from '@/app/components/NextImage';
 
 export default function MainPage() {
   const variants: Variants = {
@@ -51,6 +52,7 @@ export default function MainPage() {
   function handleMouseLeaveControls() {
     controls.start('initial');
   }
+
   return (
     <>
       <motion.div
@@ -448,8 +450,11 @@ export default function MainPage() {
       <div className='my-4 flex  items-center justify-center overflow-x-hidden'>
         <Marquee />
       </div>
-      <div className='mt-24 flex items-center justify-center'>
+      <div className='w-100 mt-24 flex flex-col items-center justify-center'>
         <WhyFusion />
+      </div>
+      <div className='w-100 mt-20 flex  items-center gap-10'>
+        <Features />
       </div>
     </>
   );
