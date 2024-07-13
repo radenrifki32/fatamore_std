@@ -58,7 +58,8 @@ export default function Header() {
                     className='flex h-10 w-10 items-center justify-center rounded-full p-0 text-sm font-light'
                   >
                     <Image
-                      src={session?.user?.image ?? ''}
+                      unoptimized
+                      src={session?.user?.image || Fuison}
                       alt='image'
                       className='h-full w-full rounded-full object-cover'
                     />
