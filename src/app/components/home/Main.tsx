@@ -10,6 +10,7 @@ import DonutSVG from '@/app/components/home/donut';
 import Features from '@/app/components/home/features';
 import Marquee from '@/app/components/home/Parralax';
 import WhyFusion from '@/app/components/home/WhyFusion';
+import Footer from '@/app/components/layout/Footer';
 import NextImage from '@/app/components/NextImage';
 
 export default function MainPage() {
@@ -450,11 +451,14 @@ export default function MainPage() {
       <div className='my-4 flex  items-center justify-center overflow-x-hidden'>
         <Marquee />
       </div>
-      <div className='w-100 mt-24 flex flex-col items-center justify-center'>
+      <div className='continer mx-auto mt-24 flex flex-col items-center justify-center'>
         <WhyFusion />
       </div>
-      <div className='w-100 mt-20 flex  items-center gap-10'>
+      <div className='container mx-auto my-10'>
         <Features />
+      </div>
+      <div>
+        <Footer />
       </div>
     </>
   );

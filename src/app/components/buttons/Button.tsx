@@ -51,7 +51,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           'inline-flex items-center rounded font-medium',
           'focus-visible:ring-primary-500 focus:outline-none focus-visible:ring',
-          'shadow-sm',
           'transition-colors duration-75',
           //#region  //*=========== Size ===========
           [
@@ -83,9 +82,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 'hover:bg-gray-900 active:bg-gray-800 disabled:bg-gray-800',
             ],
             variant === 'light' && [
-              'bg-white text-gray-700',
-              'border border-gray-300',
-              'hover:text-dark hover:bg-gray-100',
+              'bg-[#E8EBEF] text-[#355BF5]',
+              'hover:bg-[#355BF5] hover:text-white',
               'active:bg-white/80 disabled:bg-gray-200',
             ],
             variant === 'dark' && [
