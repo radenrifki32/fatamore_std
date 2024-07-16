@@ -1,21 +1,33 @@
 'use client';
+import { SignedIn, SignedOut, SignUpButton } from '@clerk/nextjs';
+import { useAuth } from '@clerk/nextjs';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Fuison from 'public/images/logo-fusion.png';
-import { useState } from 'react';
 
+import { trpc } from '@/app/_trpc/client';
 import Button from '@/app/components/buttons/Button';
-import AuthModal from '@/app/components/modal/AuthModal';
 import NextImage from '@/app/components/NextImage';
 
 export default function Header() {
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const changeOpenModal = () => {
-    setOpenModal(!openModal);
+  const { userId } = useAuth();
+
+  const router = useRouter();
+  const { data, refetch } = trpc.user.getUserById.useQuery(
+    {
+      id: userId as string,
+    },
+    { enabled: false }
+  );
+  const goToDashboard = () => {
+    refetch();
+    if (!data) {
+      router.push('/onboarding');
+    } else {
+      router.push('/projects');
+    }
   };
-  const { data: session, status } = useSession();
 
   return (
     <>
@@ -50,30 +62,25 @@ export default function Header() {
               </p>
             </Link>
             <div className='flex space-x-3 rtl:space-x-reverse md:order-2 md:space-x-0'>
-              {status === 'authenticated' ? (
-                <>
-                  <Button
-                    variant='primary'
-                    Click={signOut}
-                    className='flex h-10 w-10 items-center justify-center rounded-full p-0 text-sm font-light'
-                  >
-                    <Image
-                      unoptimized
-                      src={session?.user?.image || Fuison}
-                      alt='image'
-                      className='h-full w-full rounded-full object-cover'
-                    />
-                  </Button>
-                </>
-              ) : (
+              <SignedIn>
                 <Button
                   variant='primary'
-                  Click={changeOpenModal}
                   className='rounded-md px-4 py-2 text-sm font-light'
+                  onClick={goToDashboard}
                 >
-                  Register
+                  Dashboard
                 </Button>
-              )}
+              </SignedIn>
+              <SignedOut>
+                <SignUpButton mode='modal'>
+                  <Button
+                    variant='primary'
+                    className='rounded-md px-4 py-2 text-sm font-light'
+                  >
+                    Register
+                  </Button>
+                </SignUpButton>
+              </SignedOut>
 
               <button
                 data-collapse-toggle='navbar-sticky'
@@ -107,7 +114,7 @@ export default function Header() {
               <ul className='mt-4 flex flex-col rounded-lg border border-gray-100 p-4 font-medium rtl:space-x-reverse dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:p-0 md:dark:bg-gray-900'>
                 <li>
                   <Link
-                    href='/'
+                    href='/#features'
                     className='font-poppins font-light  text-gray-600 hover:text-gray-800'
                   >
                     Features
@@ -134,8 +141,6 @@ export default function Header() {
           </div>
         </nav>
       </motion.div>
-
-      <AuthModal isOpen={openModal} toggleModal={changeOpenModal} />
     </>
   );
 }

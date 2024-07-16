@@ -47,7 +47,7 @@ export default function Features() {
             Our Best Features 🔥
           </p>
         </div>
-        <div className='font-headNow flex h-full w-full flex-col gap-10 font-light'>
+        <div className='flex h-full w-full flex-col gap-10 font-light'>
           {features.map((feature, index) => {
             return (
               <div
@@ -85,7 +85,7 @@ export default function Features() {
                       initial={{ y: -20, opacity: 0.7 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ duration: 0.6 }}
-                      className='font-poppins mt-4 text-sm text-[#636669]'
+                      className='font-poppins mt-4 text-sm font-light text-[#636669]'
                     >
                       {feature.text}
                     </motion.p>

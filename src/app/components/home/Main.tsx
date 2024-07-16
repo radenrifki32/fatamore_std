@@ -451,7 +451,10 @@ export default function MainPage() {
       <div className='my-4 flex  items-center justify-center overflow-x-hidden'>
         <Marquee />
       </div>
-      <div className='continer mx-auto mt-24 flex flex-col items-center justify-center'>
+      <div
+        className='continer mx-auto mt-24 flex flex-col items-center justify-center'
+        id='features'
+      >
         <WhyFusion />
       </div>
       <div className='container mx-auto my-10'>

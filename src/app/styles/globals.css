@@ -116,6 +116,10 @@
     background-size: 0 2px, 100% 2px;
   }
 }
+
+html {
+  scroll-behavior: smooth;
+}
 .box-stroke {
   border: 1px solid white;
   -webkit-box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 255);

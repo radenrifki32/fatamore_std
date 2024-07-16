@@ -7,11 +7,10 @@ const nextConfig = {
   swcMinify: true,
 
   // Uncoment to add domain whitelist
-  domains: [
-    'res.cloudinary.com', // Cloudinary
-    'avatars.githubusercontent.com', // GitHub
-    'lh3.googleusercontent.com', // Google
-  ],
+  // images: {
+  //   domains: [
+  //     'res.cloudinary.com',
+  //   ],
   // },
 
   // SVGR

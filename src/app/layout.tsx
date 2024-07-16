@@ -1,11 +1,11 @@
+import { ClerkProvider } from '@clerk/nextjs';
 import { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import localFont from 'next/font/local';
 
 import './styles/globals.css';
 
-import StoreProvider from '@/app/components/providers/storeProvider';
-import SessionWrapper from '@/app/components/providers/WrapperProvider';
+import Provider from './_trpc/Provider';
 export const metadata: Metadata = {
   title: 'Home',
   description: 'Welcome to Home Fatamorgana',
@@ -30,13 +30,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <SessionWrapper>
-        <StoreProvider>
+      <ClerkProvider
+        appearance={{
+          layout: {
+            socialButtonsPlacement: 'top',
+            logoPlacement: 'none',
+          },
+          variables: {
+            colorPrimary: '#355BF5',
+            colorText: 'black',
+          },
+        }}
+      >
+        <Provider>
           <body className={`${myFont.className} ${poppins.className}`}>
             {children}
           </body>
-        </StoreProvider>
-      </SessionWrapper>
+        </Provider>
+      </ClerkProvider>
     </html>
   );
 }

@@ -1,3 +1,11 @@
-export { default } from 'next-auth/middleware';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
-export const config = { matcher: ['/recruiter'] };
+const isProtectedRoute = createRouteMatcher(['/projects(.*)']);
+
+export default clerkMiddleware((auth, req) => {
+  if (isProtectedRoute(req)) auth().protect();
+});
+
+export const config = {
+  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+};
