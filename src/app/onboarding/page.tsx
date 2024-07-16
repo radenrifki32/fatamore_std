@@ -18,10 +18,10 @@ export default function OnBoarding() {
 
   return (
     <div>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
       <form onSubmit={(e) => handleUpdate(e)}>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
         <input name='username' />
       </form>
     </div>
