@@ -17,13 +17,15 @@ export default function OnBoarding() {
   };
 
   return (
-    <div>
+    <>
       <SignedIn>
         <UserButton />
       </SignedIn>
-      <form onSubmit={(e) => handleUpdate(e)}>
-        <input name='username' />
-      </form>
-    </div>
+      <div className='flex items-center justify-center'>
+        <form onSubmit={(e) => handleUpdate(e)}>
+          <input name='username' />
+        </form>
+      </div>
+    </>
   );
 }

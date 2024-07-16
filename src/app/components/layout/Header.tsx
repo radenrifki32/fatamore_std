@@ -20,8 +20,8 @@ export default function Header() {
     },
     { enabled: false }
   );
-  const goToDashboard = () => {
-    refetch();
+  const goToDashboard = async () => {
+    await refetch();
     if (!data) {
       router.push('/onboarding');
     } else {
