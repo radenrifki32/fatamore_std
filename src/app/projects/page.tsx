@@ -1,3 +1,11 @@
-export default function Recruiter() {
-  return <div>Hello</div>;
+import { SignedIn, UserButton } from '@clerk/nextjs';
+
+export default function Projects() {
+  return (
+    <>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+    </>
+  );
 }
