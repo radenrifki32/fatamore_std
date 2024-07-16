@@ -3,23 +3,23 @@ import {
   WebhookEventType,
 } from '@clerk/nextjs/dist/types/server';
 import { Prisma } from '@prisma/client';
-import { IncomingHttpHeaders } from 'http';
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { Webhook, WebhookRequiredHeaders } from 'svix';
 
 import { prisma } from '@/lib/db';
-export async function handler(request: Request) {
+
+export async function POST(request: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET ?? '';
   if (!WEBHOOK_SECRET) {
     throw new Error('Please add Webhook secret from Clerk');
   }
 
   const headersPayload = headers();
-  const headerSvix = {
-    'svix-id': headersPayload.get('svix-id'),
-    'svix-timestamp': headersPayload.get('svix-timestamp'),
-    'svix-signature': headersPayload.get('svix-signature'),
+  const headerSvix: WebhookRequiredHeaders = {
+    'svix-id': headersPayload.get('svix-id') as string,
+    'svix-timestamp': headersPayload.get('svix-timestamp') as string,
+    'svix-signature': headersPayload.get('svix-signature') as string,
   };
 
   if (
@@ -39,10 +39,7 @@ export async function handler(request: Request) {
   let event: WebhookEvent | null = null;
 
   try {
-    event = wh.verify(
-      body,
-      headerSvix as IncomingHttpHeaders & WebhookRequiredHeaders
-    ) as WebhookEvent;
+    event = wh.verify(body, headerSvix) as WebhookEvent;
   } catch (error) {
     console.error((error as Error).message);
     return NextResponse.json(
@@ -50,8 +47,10 @@ export async function handler(request: Request) {
       { status: 400 }
     );
   }
+
   const { id, ...attributes } = event.data;
   const eventType: WebhookEventType = event.type;
+
   if (eventType === 'user.created' || eventType === 'user.updated') {
     console.log(attributes, 'attributes');
     await prisma.user.upsert({
@@ -71,6 +70,7 @@ export async function handler(request: Request) {
         externalId: id,
       },
     });
+    return NextResponse.json({}, { status: 200 });
   }
 
   return NextResponse.json(
@@ -79,6 +79,4 @@ export async function handler(request: Request) {
   );
 }
 
-export const GET = handler;
-export const POST = handler;
-export const PUT = handler;
+export const GET = POST;

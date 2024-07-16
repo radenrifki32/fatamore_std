@@ -1,4 +1,5 @@
 'use client';
+import { SignedIn, UserButton } from '@clerk/clerk-react';
 import { useAuth } from '@clerk/nextjs';
 import React from 'react';
 
@@ -18,6 +19,9 @@ export default function OnBoarding() {
   return (
     <div>
       <form onSubmit={(e) => handleUpdate(e)}>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
         <input name='username' />
       </form>
     </div>
