@@ -5,9 +5,12 @@ import localFont from 'next/font/local';
 
 import './styles/globals.css';
 
+import ProvidersLoader from '@/Provider/ProviderLoader';
+import { ThemeProvider } from '@/Provider/theme-provider';
+
 import Provider from './_trpc/Provider';
 export const metadata: Metadata = {
-  title: 'Home',
+  title: 'Fusion Craft',
   description: 'Welcome to Home Fatamorgana',
 };
 
@@ -29,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <ClerkProvider
         appearance={{
           layout: {
@@ -44,7 +47,9 @@ export default function RootLayout({
       >
         <Provider>
           <body className={`${myFont.className} ${poppins.className}`}>
-            {children}
+            <ThemeProvider attribute='class' defaultTheme='light' enableSystem>
+              <ProvidersLoader>{children}</ProvidersLoader>
+            </ThemeProvider>
           </body>
         </Provider>
       </ClerkProvider>

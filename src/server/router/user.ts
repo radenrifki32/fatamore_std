@@ -1,13 +1,22 @@
+import { createClerkClient, UserJSON } from '@clerk/backend';
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 
-import { publicProcedure, router } from '../trpc';
-const idSchema = z.object({ id: z.string() });
-const updateSchema = z.object({ id: z.string(), username: z.string() });
+import { protectedProcedure, publicProcedure, router } from '../trpc';
+const clerkClient = createClerkClient({
+  secretKey: process.env.CLERK_SECRET_KEY,
+});
+const updateSchema = z.object({ username: z.string() });
 const createUserSchema = z.object({ id: z.string(), attributes: z.unknown() });
 
-type UserAttributes = {
-  username?: string;
+type PrismaUserAttributes = Prisma.UserCreateInput &
+  Prisma.UserUncheckedCreateInput;
+type UserWithJSONAttributes = Omit<PrismaUserAttributes, 'attributes'> & {
+  attributes: Partial<UserJSON>;
+};
+type typeReturnGetUserById = {
+  isUsername: boolean;
+  data: UserWithJSONAttributes | null;
 };
 
 export const UserRouter = router({
@@ -24,50 +33,41 @@ export const UserRouter = router({
         },
       });
     }),
-  getUserById: publicProcedure.input(idSchema).query(async ({ input, ctx }) => {
-    const checkUser = await ctx.prisma.user.findFirst({
-      where: {
-        externalId: input.id,
-      },
-    });
-    if (
-      !checkUser ||
-      !checkUser.attributes ||
-      typeof checkUser.attributes !== 'object'
-    ) {
-      return false;
+  getUserById: protectedProcedure.query(
+    async ({ ctx }): Promise<typeReturnGetUserById> => {
+      console.log(ctx.user.id);
+      const checkUser = await ctx.prisma.user.findUnique({
+        where: {
+          externalId: ctx.user?.id as string,
+        },
+      });
+      console.log(checkUser, 'check');
+      if (
+        !checkUser ||
+        !checkUser.attributes ||
+        typeof checkUser.attributes !== 'object'
+      ) {
+        return { isUsername: false, data: checkUser } as typeReturnGetUserById;
+      }
+      const attributes = checkUser.attributes as unknown as UserJSON;
+      if (!attributes.username) {
+        console.log('kesini');
+
+        return { isUsername: false, data: checkUser } as typeReturnGetUserById;
+      }
+      console.log();
+      return { isUsername: true, data: checkUser } as typeReturnGetUserById;
     }
-    const attributes = checkUser.attributes as UserAttributes;
-    if (!attributes.username) {
-      return false;
-    }
-    return true;
-  }),
-  updateUserById: publicProcedure
+  ),
+  updateUserById: protectedProcedure
     .input(updateSchema)
     .mutation(async ({ input, ctx }) => {
-      const { id, username } = input;
-      const user = await ctx.prisma.user.findUnique({
-        where: {
-          externalId: id,
-        },
+      const { username } = input;
+      console.log(username);
+      const result = await clerkClient.users.updateUser(ctx.user.id, {
+        username,
       });
-
-      if (!user) {
-        throw new Error('User not found');
-      }
-      const updatedAttributes = {
-        ...(user.attributes as Prisma.JsonObject),
-        username: username,
-      };
-
-      await ctx.prisma.user.update({
-        where: {
-          externalId: id,
-        },
-        data: {
-          attributes: updatedAttributes,
-        },
-      });
+      console.log(result);
+      return result;
     }),
 });

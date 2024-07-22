@@ -7,7 +7,7 @@ import Layout from '@/app/components/layout/Layout';
 export default function HomePage() {
   return (
     <Layout>
-      <main className='relative -z-0 h-full w-full bg-[#F4F7F9]'>
+      <main className='relative -z-0 h-full w-full bg-[#F4F7F9] dark:bg-black'>
         <div className='absolute -top-[65px] left-0 -z-10 h-full '>
           <motion.svg
             initial={{ opacity: 0, x: -200 }}

@@ -3,8 +3,9 @@ import { ChevronRight, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 
 import Button from '@/app/components/buttons/Button';
+import NextImage from '@/app/components/NextImage';
 
-import DashboardSvg from '~/images/Dashboard';
+import DashboardSvg from '~/images/iMac.png';
 interface iFeatures {
   title: string;
   text: string;
@@ -28,8 +29,13 @@ export default function Features() {
   const [showTextFeature, setShowTextFeatures] = useState<number>(0);
   return (
     <div className='w-100 h-100 font-poppins container mx-auto flex  gap-20 px-10'>
-      <div className='w-100 h-100 rounded-xl bg-[#EBEFFE]  pt-10'>
-        <DashboardSvg />
+      <div className='w-100 h-100'>
+        <NextImage
+          src={DashboardSvg.src}
+          height={DashboardSvg.height}
+          width={DashboardSvg.width}
+          alt='image-mac'
+        />
       </div>
       <div className='h-100 relative w-full'>
         <div className='absolute bottom-5 left-1'>
