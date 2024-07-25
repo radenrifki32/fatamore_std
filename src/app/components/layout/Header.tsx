@@ -7,7 +7,6 @@ import Fuison from 'public/images/logo-fusion.png';
 
 import { trpc } from '@/app/_trpc/client';
 import Button from '@/app/components/buttons/Button';
-import { ModeToggle } from '@/app/components/mode-toggle';
 import NextImage from '@/app/components/NextImage';
 
 export default function Header() {
@@ -75,9 +74,6 @@ export default function Header() {
                 </Button>
               </SignUpButton>
             </SignedOut>
-            <div className='mx-10'>
-              <ModeToggle />
-            </div>
 
             <button
               data-collapse-toggle='navbar-sticky'

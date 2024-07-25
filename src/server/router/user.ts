@@ -51,23 +51,24 @@ export const UserRouter = router({
       }
       const attributes = checkUser.attributes as unknown as UserJSON;
       if (!attributes.username) {
-        console.log('kesini');
-
         return { isUsername: false, data: checkUser } as typeReturnGetUserById;
       }
-      console.log();
       return { isUsername: true, data: checkUser } as typeReturnGetUserById;
     }
   ),
   updateUserById: protectedProcedure
     .input(updateSchema)
     .mutation(async ({ input, ctx }) => {
-      const { username } = input;
-      console.log(username);
-      const result = await clerkClient.users.updateUser(ctx.user.id, {
-        username,
-      });
-      console.log(result);
-      return result;
+      try {
+        const { username } = input;
+        console.log(ctx.user.id, 'user id');
+        const result = await clerkClient.users.updateUser(ctx.user.id, {
+          username,
+        });
+        return result;
+      } catch (error) {
+        console.error('Error updating user:', error);
+        throw new Error('Failed to update user');
+      }
     }),
 });
