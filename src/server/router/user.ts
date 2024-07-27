@@ -15,7 +15,6 @@ type UserWithJSONAttributes = Omit<PrismaUserAttributes, 'attributes'> & {
   attributes: Partial<UserJSON>;
 };
 type typeReturnGetUserById = {
-  isUsername: boolean;
   data: UserWithJSONAttributes | null;
 };
 
@@ -38,22 +37,13 @@ export const UserRouter = router({
       console.log(ctx.user.id);
       const checkUser = await ctx.prisma.user.findUnique({
         where: {
-          externalId: ctx.user?.id as string,
+          externalId: ctx.user?.id,
         },
       });
-      console.log(checkUser, 'check');
-      if (
-        !checkUser ||
-        !checkUser.attributes ||
-        typeof checkUser.attributes !== 'object'
-      ) {
-        return { isUsername: false, data: checkUser } as typeReturnGetUserById;
+      if (checkUser?.isOnProgressFinish) {
+        return { data: checkUser } as typeReturnGetUserById;
       }
-      const attributes = checkUser.attributes as unknown as UserJSON;
-      if (!attributes.username) {
-        return { isUsername: false, data: checkUser } as typeReturnGetUserById;
-      }
-      return { isUsername: true, data: checkUser } as typeReturnGetUserById;
+      return { data: checkUser } as typeReturnGetUserById;
     }
   ),
   updateUserById: protectedProcedure
@@ -67,8 +57,7 @@ export const UserRouter = router({
         });
         return result;
       } catch (error) {
-        console.error('Error updating user:', error);
-        throw new Error('Failed to update user');
+        console.log(error);
       }
     }),
 });

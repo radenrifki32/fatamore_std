@@ -16,7 +16,7 @@ export default function Header() {
   });
   const goToDashboard = async () => {
     const result = await refetch();
-    if (result?.data?.isUsername) {
+    if (result?.data?.data?.isOnProgressFinish) {
       router.push('/projects');
     } else {
       router.push('/onboarding');

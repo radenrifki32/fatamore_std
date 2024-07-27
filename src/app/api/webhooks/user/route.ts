@@ -52,9 +52,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { id, ...rest } = event.data;
-  const attributes = { id, ...rest };
-
+  const { id, ...attributes } = event.data;
   const eventType: WebhookEventType = event.type;
   if (eventType === 'user.created' || eventType === 'user.updated') {
     await prisma.user.upsert({

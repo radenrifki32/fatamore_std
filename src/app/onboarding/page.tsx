@@ -5,12 +5,20 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next-nprogress-bar';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+
+import { Currency } from '@/lib/inferface/currency';
+import {
+  createProjectSchema,
+  formSchema,
+  TCreateProjectSchema,
+  TFormSchema,
+} from '@/lib/shcema';
 
 import { trpc } from '@/app/_trpc/client';
 import NextImage from '@/app/components/NextImage';
 import { Button } from '@/app/components/ui/button';
 import { Card } from '@/app/components/ui/card';
+import CurrencyListComponent from '@/app/components/ui/combobox';
 import {
   Form,
   FormControl,
@@ -21,57 +29,113 @@ import {
 } from '@/app/components/ui/form';
 import { Input } from '@/app/components/ui/input';
 import { Progress } from '@/app/components/ui/progress';
+import { useToast } from '@/app/components/ui/use-toast';
+
 export default function OnBoarding() {
-  const [progress, setProgress] = useState<number>(0);
+  const [progress, setProgress] = useState<number>(20);
   const [createProject, setCreateProject] = useState<string>('');
+  const [currency, setCurrency] = useState<Currency>({
+    name: '',
+    symbol: '',
+    code: '',
+  });
+
   const router = useRouter();
   const searchParams = useSearchParams();
-  const formSchema = z.object({
-    username: z
-      .string()
-      .min(2, {
-        message: 'Username must be at least 2 characters.',
-      })
-      .max(100, {
-        message: 'Username must be at least 100 characters.',
-      }),
-  });
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { toast } = useToast();
+  const scene = searchParams.get('scene');
+  const form = useForm<TFormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: '',
     },
   });
-  const updateUsername = trpc.user.updateUserById.useMutation();
-  const { data, refetch } = trpc.user.getUserById.useQuery(undefined, {
-    enabled: false,
+  const createProjectForm = useForm<TCreateProjectSchema>({
+    resolver: zodResolver(createProjectSchema),
+    defaultValues: {
+      projectDesription: '',
+      projectname: '',
+      projectTargetUser: '',
+    },
   });
+  const updateUsername = trpc.user.updateUserById.useMutation();
+  const createNewProjectMutation = trpc.project.createProject.useMutation();
+  const addCurrencyUserMutation =
+    trpc.currency.insertUserCurrency.useMutation();
+  const { data: userData, refetch: refetchUser } =
+    trpc.user.getUserById.useQuery(undefined, {
+      enabled: false,
+    });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  const { data: currencyData, refetch: refetchCurrency } =
+    trpc.currency.getCurrency.useQuery(undefined, {
+      enabled: false,
+    });
+
+  async function onSubmit(values: TFormSchema) {
     try {
       await updateUsername.mutateAsync({
         username: values.username,
       });
-      const response = await refetch();
+      const response = await refetchUser();
       if (response.status === 'success') {
-        setProgress((prev) => prev + 30);
+        setProgress((prev) => prev + 20);
         router.push('/onboarding?scene=project');
+      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'error',
+        variant: 'destructive',
+      });
+    }
+  }
+  async function onCreateNewProject(values: TCreateProjectSchema) {
+    try {
+      const { projectname, projectDesription, projectTargetUser } = values;
+      const response = await createNewProjectMutation.mutateAsync({
+        projectname,
+        projectDesription,
+        projectTargetUser,
+      });
+      if (response.status == 200) {
+        setProgress((prev) => prev + 20);
+        router.push('/onboarding?scene=currency');
       }
     } catch (error) {
       console.log(error);
     }
   }
-  const SelectProject = (project: string) => {
+  function SelectProject(project: string) {
     setCreateProject(project);
-  };
-  const createNewProject = () => {
+  }
+  function createNewProject() {
     if (createProject === 'new') {
+      setProgress((prev) => prev + 20);
       router.push('/onboarding?scene=add-project');
     }
-  };
+  }
+  async function addCurrencyUser() {
+    const response = await addCurrencyUserMutation.mutateAsync({
+      code: currency.code as string,
+      name: currency.name,
+      symbol: currency.symbol,
+    });
+    if (response.status === 200) {
+      setProgress((prev) => prev + 20);
+      router.push('/onboarding?scene=finish-onboarding');
+    }
+  }
+  function goToDahboard() {
+    router.push('/projects');
+  }
   useEffect(() => {
-    refetch();
-  }, [refetch]);
+    if (scene == 'currency') {
+      refetchCurrency();
+    } else if (scene === 'project') {
+      refetchUser();
+    }
+  }, [refetchUser, scene, refetchCurrency]);
 
   return (
     <div className='h-screen w-full overflow-hidden bg-[#EEEEEE]'>
@@ -88,12 +152,11 @@ export default function OnBoarding() {
         </p>
       </div>
       {(() => {
-        const scene = searchParams.get('scene');
         if (scene === 'project') {
           return (
             <div className='flex h-full w-full flex-col items-center justify-center bg-[#EEEEEE]'>
-              <h2 className=' py-4  text-2xl font-bold font-medium'>
-                Hi, {data?.data?.attributes?.username} Let’s get started 😄
+              <h2 className=' py-4  text-2xl font-bold'>
+                Hi, {userData?.data?.attributes?.username} Let’s get started 😄
               </h2>
               <p className='font-poppins  text-sm font-light'>
                 Do your want to create a new project or add an existing one?
@@ -148,11 +211,122 @@ export default function OnBoarding() {
               </Button>
             </div>
           );
+        } else if (scene === 'add-project') {
+          return (
+            <div className='mx-auto flex h-full w-1/3 flex-col items-center justify-center '>
+              <h1 className='font-poppins py-4 text-2xl font-bold'>
+                Tell us more about your project
+              </h1>
+              <h2 className='font-poppins text-md font-light'>
+                Can you provide us more information about your project?
+              </h2>
+              <Form {...createProjectForm}>
+                <form
+                  onSubmit={createProjectForm.handleSubmit(onCreateNewProject)}
+                  className='my-10 w-full'
+                >
+                  <FormField
+                    control={createProjectForm.control}
+                    name='projectname'
+                    render={({ field }) => (
+                      <FormItem className='mb-8 flex flex-col'>
+                        <FormLabel className='font-poppins font-sm  font-extralight'>
+                          Project Name
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder='The Roro Jongrang' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={createProjectForm.control}
+                    name='projectDesription'
+                    render={({ field }) => (
+                      <FormItem className='mb-8 flex flex-col'>
+                        <FormLabel className='font-poppins font-sm  font-extralight'>
+                          Description
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder='an app help track timeline'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={createProjectForm.control}
+                    name='projectTargetUser'
+                    render={({ field }) => (
+                      <FormItem className='mb-8 flex flex-col'>
+                        <FormLabel className='font-poppins font-sm  font-extralight'>
+                          Target User(s)
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder='budak corporate' {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button
+                    type='submit'
+                    className='mt-10 flex w-full items-center justify-between'
+                  >
+                    <div className='flex-1 text-center'>Continue</div>
+                    <ArrowRight className='ml-2' />
+                  </Button>
+                </form>
+              </Form>
+            </div>
+          );
+        } else if (scene === 'currency') {
+          return (
+            <div className='mx-auto flex h-full w-1/2 flex-col items-center justify-center bg-[#EEEEEE]'>
+              <p className='font-poppins py-4 text-center text-xl font-bold'>
+                Chose your currency{' '}
+              </p>
+              <p className='font-poppins mb-4 text-sm font-light'>
+                What currency will you be using?
+              </p>
+              <CurrencyListComponent
+                data={currencyData?.data}
+                value={currency}
+                setValue={setCurrency}
+              />
+              <Button
+                onClick={addCurrencyUser}
+                className='mt-10 flex w-2/3 items-center justify-between'
+              >
+                <div className='flex-1 text-center'>Continue</div>
+                <ArrowRight className='ml-2' />
+              </Button>
+            </div>
+          );
+        } else if (scene == 'finish-onboarding') {
+          return (
+            <div className='mx-auto flex h-full w-1/2 flex-col items-center justify-center bg-[#EEEEEE]'>
+              <p className='font-poppins py-4 text-center text-xl font-bold'>
+                Congratulations 🎉
+              </p>
+              <p className='font-poppins mb-4 text-sm font-light'>
+                You have computed the onboarding process!
+              </p>
+              <Button
+                onClick={goToDahboard}
+                className='mt-4 flex w-2/3 items-center '
+              >
+                <div className='text-center'>Go to Dashboard</div>
+                <ArrowRight className='ml-2' />
+              </Button>
+            </div>
+          );
         }
-        // Tambahkan kondisi lain di sini
-        // if (scene === 'anotherCondition') {
-        //   return <AnotherComponent />;
-        // }
         return (
           <div className='flex h-full w-full flex-col items-center justify-center bg-[#EEEEEE]'>
             <Form {...form}>
@@ -183,7 +357,7 @@ export default function OnBoarding() {
                   type='submit'
                   className='flex w-full items-center justify-between'
                 >
-                  <div className='flex-1 text-center'>Continue</div>
+                  <div className='flex-1 text-center'>Continue {scene}</div>
                   <ArrowRight className='ml-2' />
                 </Button>
               </form>

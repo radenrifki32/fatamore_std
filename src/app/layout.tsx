@@ -5,6 +5,7 @@ import localFont from 'next/font/local';
 
 import './styles/globals.css';
 
+import { Toaster } from '@/app/components/ui/toaster';
 import ProvidersLoader from '@/Provider/ProviderLoader';
 import { ThemeProvider } from '@/Provider/theme-provider';
 
@@ -48,7 +49,10 @@ export default function RootLayout({
         <Provider>
           <body className={`${myFont.className} ${poppins.className}`}>
             <ThemeProvider attribute='class' defaultTheme='light' enableSystem>
-              <ProvidersLoader>{children}</ProvidersLoader>
+              <ProvidersLoader>
+                {children}
+                <Toaster />
+              </ProvidersLoader>
             </ThemeProvider>
           </body>
         </Provider>
