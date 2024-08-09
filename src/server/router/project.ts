@@ -1,4 +1,5 @@
 import { Project } from '@prisma/client';
+import { HttpStatusCode } from 'axios';
 
 import { ResponseSucces } from '@/lib/inferface/response';
 import { createProjectSchema } from '@/lib/shcema';
@@ -39,4 +40,18 @@ export const ProjectRouter = router({
         data: transactionProject,
       };
     }),
+  getAllProjects: protectedProcedure.query(
+    async ({ ctx }): Promise<ResponseSucces<Project[]>> => {
+      const response = await ctx.prisma.project.findMany({
+        where: {
+          userId: ctx.user.id,
+        },
+      });
+      return {
+        message: 'Success',
+        status: HttpStatusCode.Ok,
+        data: response,
+      };
+    }
+  ),
 });

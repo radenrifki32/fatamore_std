@@ -1,9 +1,11 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { HttpStatusCode } from 'axios';
 import { ArrowRight, FolderClosed, FolderPlus } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next-nprogress-bar';
 import React, { useEffect, useState } from 'react';
+import Realistic from 'react-canvas-confetti/dist/presets/realistic';
 import { useForm } from 'react-hook-form';
 
 import { Currency } from '@/lib/inferface/currency';
@@ -60,6 +62,7 @@ export default function OnBoarding() {
   });
   const updateUsername = trpc.user.updateUserById.useMutation();
   const createNewProjectMutation = trpc.project.createProject.useMutation();
+  const updateFinishOnboarding = trpc.user.finsihOnBoarding.useMutation();
   const addCurrencyUserMutation =
     trpc.currency.insertUserCurrency.useMutation();
   const { data: userData, refetch: refetchUser } =
@@ -98,7 +101,7 @@ export default function OnBoarding() {
         projectDesription,
         projectTargetUser,
       });
-      if (response.status == 200) {
+      if (response.status == HttpStatusCode.Ok) {
         setProgress((prev) => prev + 20);
         router.push('/onboarding?scene=currency');
       }
@@ -115,19 +118,23 @@ export default function OnBoarding() {
       router.push('/onboarding?scene=add-project');
     }
   }
+
   async function addCurrencyUser() {
     const response = await addCurrencyUserMutation.mutateAsync({
       code: currency.code as string,
       name: currency.name,
       symbol: currency.symbol,
     });
-    if (response.status === 200) {
+    if (response.status === HttpStatusCode.Ok) {
       setProgress((prev) => prev + 20);
       router.push('/onboarding?scene=finish-onboarding');
     }
   }
-  function goToDahboard() {
-    router.push('/projects');
+  async function goToDahboard() {
+    const response = await updateFinishOnboarding.mutateAsync();
+    if (response.status === HttpStatusCode.Ok) {
+      router.push('/projects');
+    }
   }
   useEffect(() => {
     if (scene == 'currency') {
@@ -310,20 +317,23 @@ export default function OnBoarding() {
           );
         } else if (scene == 'finish-onboarding') {
           return (
-            <div className='mx-auto flex h-full w-1/2 flex-col items-center justify-center bg-[#EEEEEE]'>
-              <p className='font-poppins py-4 text-center text-xl font-bold'>
-                Congratulations 🎉
-              </p>
-              <p className='font-poppins mb-4 text-sm font-light'>
-                You have computed the onboarding process!
-              </p>
-              <Button
-                onClick={goToDahboard}
-                className='mt-4 flex w-2/3 items-center '
-              >
-                <div className='text-center'>Go to Dashboard</div>
-                <ArrowRight className='ml-2' />
-              </Button>
+            <div className=' h-screen w-full bg-[#EEEEEE]'>
+              <Realistic autorun={{ speed: 1, delay: 10, duration: 10 }} />
+              <div className='mx-auto flex h-full w-1/2 flex-col items-center justify-center'>
+                <p className='font-poppins py-4 text-center text-xl font-bold'>
+                  Congratulations 🎉
+                </p>
+                <p className='font-poppins mb-4 text-sm font-light'>
+                  You have completed the onboarding process!
+                </p>
+                <Button
+                  onClick={goToDahboard}
+                  className='mt-4 flex w-2/3 items-center '
+                >
+                  <div className='text-center'>Go to Dashboard</div>
+                  <ArrowRight className='ml-2' />
+                </Button>
+              </div>
             </div>
           );
         }

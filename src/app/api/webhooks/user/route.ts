@@ -1,4 +1,3 @@
-import { createClerkClient } from '@clerk/backend';
 import {
   WebhookEvent,
   WebhookEventType,
@@ -10,9 +9,6 @@ import { Webhook, WebhookRequiredHeaders } from 'svix';
 
 import { prisma } from '@/lib/db';
 
-const clerkClient = createClerkClient({
-  secretKey: process.env.CLERK_SECRET_KEY,
-});
 export async function POST(request: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET ?? '';
   if (!WEBHOOK_SECRET) {
@@ -67,7 +63,6 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({}, { status: 200 });
   } else if (eventType === 'user.deleted') {
-    await clerkClient.users.deleteUser(id as string);
     await prisma.user.delete({
       where: {
         externalId: id,

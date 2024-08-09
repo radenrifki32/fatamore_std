@@ -1,6 +1,9 @@
 import { createClerkClient, UserJSON } from '@clerk/backend';
 import { Prisma } from '@prisma/client';
+import { HttpStatusCode } from 'axios';
 import { z } from 'zod';
+
+import { ResponseSucces } from '@/lib/inferface/response';
 
 import { protectedProcedure, publicProcedure, router } from '../trpc';
 const clerkClient = createClerkClient({
@@ -44,6 +47,22 @@ export const UserRouter = router({
         return { data: checkUser } as typeReturnGetUserById;
       }
       return { data: checkUser } as typeReturnGetUserById;
+    }
+  ),
+  finsihOnBoarding: protectedProcedure.mutation(
+    async ({ ctx }): Promise<ResponseSucces<null>> => {
+      await ctx.prisma.user.update({
+        where: {
+          externalId: ctx.user.id,
+        },
+        data: {
+          isOnProgressFinish: true,
+        },
+      });
+      return {
+        message: 'Success',
+        status: HttpStatusCode.Ok,
+      };
     }
   ),
   updateUserById: protectedProcedure

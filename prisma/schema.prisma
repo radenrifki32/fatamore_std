@@ -36,7 +36,7 @@ model Project {
   created_at          DateTime        @default(now())
   updated_at          DateTime        @updatedAt
   ProjectMember       ProjectMember[]
-  user                User            @relation(fields: [userId], references: [externalId])
+  user                User            @relation(fields: [userId], references: [externalId], onDelete: Cascade)
   userId              String
 }
 
@@ -46,8 +46,8 @@ model ProjectMember {
   project_id String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user       User     @relation(fields: [user_id], references: [externalId])
-  project    Project  @relation(fields: [project_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [externalId], onDelete: Cascade)
+  project    Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, project_id])
 }
@@ -66,7 +66,7 @@ model UserCurrency {
   currencyId String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  user       User     @relation(fields: [userId], references: [externalId])
+  user       User     @relation(fields: [userId], references: [externalId], onDelete: Cascade)
   currency   Currency @relation(fields: [currencyId], references: [id])
 
   @@unique([userId, currencyId])
