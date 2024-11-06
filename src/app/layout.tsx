@@ -48,7 +48,7 @@ export default function RootLayout({
       >
         <Provider>
           <body className={`${myFont.className} ${poppins.className}`}>
-            <ThemeProvider attribute='class' defaultTheme='dark'>
+            <ThemeProvider attribute='class' defaultTheme='light'>
               <ProvidersLoader>
                 {children}
                 <Toaster />

@@ -9,13 +9,14 @@ export const ProjectRouter = router({
   createProject: protectedProcedure
     .input(createProjectSchema)
     .mutation(async ({ ctx, input }): Promise<ResponseSucces<Project>> => {
+      const { projectname, projectDesription, projectTargetUser } = input;
       const transactionProject = await ctx.prisma.$transaction(
         async (prisma) => {
           const project = await ctx.prisma.project.create({
             data: {
-              project_name: input.projectname,
-              project_description: input.projectDesription,
-              project_target: input.projectTargetUser,
+              project_name: projectname,
+              project_description: projectDesription,
+              project_target: projectTargetUser,
               created_by: ctx.user.id,
               user: {
                 connect: {
@@ -35,7 +36,7 @@ export const ProjectRouter = router({
       );
 
       return {
-        message: `Success Create New Project ${input.projectname}`,
+        message: `Success Create New Project ${projectname}`,
         status: 200,
         data: transactionProject,
       };
